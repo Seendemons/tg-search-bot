@@ -1,2 +1,6 @@
-def main() -> None:
-    print("Hello from first-bot!")
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+BOT_TOKEN = os.environ['BOT_TOKEN']
