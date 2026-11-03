@@ -1,39 +1,35 @@
 from aiogram import Router, F
 from aiogram.filters import Command, CommandStart
 from aiogram.types import Message
+from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import State, StatesGroup
 
 router = Router()
+
+
+class SearchStates(StatesGroup):
+    waiting_for_query = State()
+
 
 @router.message(CommandStart())
 async def start_command(message: Message):
     await message.answer("Привет! Я твой первый бот.")
 
 
-@router.message(Command("about"))
-async def about_command(message: Message):
-    await message.answer("Я бот, созданный с использованием библиотеки aiogram.")
-
-
 @router.message(Command("help"))
 async def help_command(message: Message):
-    await message.answer("Я умею выполнять команды /start, /help, /about.")
+    await message.answer("Я умею выполнять команды /search")
 
 
-@router.message(F.text.lower() == "как дела")
-async def how_are_you(message: Message):
-    await message.answer("Хорошо, учусь быть ботом!")
+@router.message(Command("search"))
+async def search_command(message: Message, state: FSMContext):
+    await state.set_state(SearchStates.waiting_for_query)
+    await message.answer("Что будем искать?")
 
 
-@router.message(F.text.lower() == "пока")
-async def goodbye(message: Message):
-    await message.answer("До встречи!")
+@router.message(SearchStates.waiting_for_query, F.text)
+async def receive_search_query(message: Message, state: FSMContext):
+    query = message.text
 
-
-@router.message(F.text.lower() == "привет")
-async def greeting(message: Message):
-    await message.answer("И тебе привет! Как дела?")
-
-
-@router.message()
-async def unknown_message(message: Message):
-    await message.answer("Я тебя не пон")
+    await state.clear()
+    await message.answer(f"Ты ищешь: {query}")
