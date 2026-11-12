@@ -1,10 +1,11 @@
-import os
 import asyncio
-from dotenv import load_dotenv
-from aiogram import Bot, Dispatcher
-from first_bot.handlers import router
-from aiogram.types import BotCommand
+import os
 
+from aiogram import Bot, Dispatcher
+from aiogram.types import BotCommand
+from dotenv import load_dotenv
+
+from first_bot.handlers import router
 
 load_dotenv()
 
