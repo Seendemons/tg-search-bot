@@ -4,9 +4,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import Message
 
-from first_bot.github import search_github
-from first_bot.stackoverflow import search_stackoverflow
-from first_bot.wikipedia import search_wiki
+from first_bot.searches import search_github, search_stackoverflow, search_wiki
 
 router = Router()
 
@@ -36,18 +34,33 @@ async def receive_search_query(message: Message, state: FSMContext):
     query = message.text
     await state.clear()
 
-    wiki_media = await search_wiki(query)
-    github_media = await search_github(query)
-    stackoverflow_media = await search_stackoverflow(query)
+    wiki_results, wiki_message = await search_wiki(query)
+    github_results, github_message = await search_github(query)
+    stackoverflow_results, stackoverflow_message = await search_stackoverflow(query)
 
-    # Википедия:
-    receive = "\n".join(wiki_media)
-    await message.answer(receive)
+    # Wikipedia:
+    if wiki_message:
+        await message.answer(wiki_message)
+    else:
+        await message.answer("Wikipedia")
+        for item in wiki_results:
+            receive = f"{item.title}\n{item.description}\n{item.url}\n{item.source}"
+            await message.answer(receive)
 
     # Github:
-    receive = "\n".join(github_media)
-    await message.answer(receive)
+    if github_message:
+        await message.answer(github_message)
+    else:
+        await message.answer("Github")
+        for item in github_results:
+            receive = f"{item.title}\n{item.description}\n{item.stars}\n{item.language}\n{item.url}\n{item.source}"
+            await message.answer(receive)
 
     # StackOverflow
-    receive = "\n".join(stackoverflow_media)
-    await message.answer(receive)
+    if stackoverflow_message:
+        await message.answer(stackoverflow_message)
+    else:
+        await message.answer("StackOverflow")
+        for item in stackoverflow_results:
+            receive = f"{item.title}\n{item.answ_count}\n{item.rating}\n{item.is_answered}\n{item.url}\n{item.source}"
+            await message.answer(receive)
