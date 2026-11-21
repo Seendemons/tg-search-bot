@@ -19,7 +19,7 @@ async def search_wiki(query: str | None) -> tuple[list[SearchResult], str | None
 
     async with httpx.AsyncClient() as client:
         try:
-            response = await client.get(URL, params=PARAMS, headers=HEADERS, timeout=10)
+            response = await client.get(URL, params=PARAMS, headers=HEADERS, timeout=None)
             response.raise_for_status()
         except httpx.RequestError:
             return [], "Wikipedia: Не удалось выполнить поиск, попробуйте позже"
@@ -60,7 +60,7 @@ async def search_github(query: str | None) -> tuple[list[SearchResult], str | No
 
     async with httpx.AsyncClient() as client:
         try:
-            response = await client.get(URL, params=PARAMS, headers=HEADERS, timeout=10)
+            response = await client.get(URL, params=PARAMS, headers=HEADERS, timeout=None)
             response.raise_for_status()
         except httpx.RequestError:
             return [], "Github: Не удалось выполнить поиск, попробуйте позже"
@@ -102,7 +102,7 @@ async def search_stackoverflow(query: str | None) -> tuple[list[SearchResult], s
 
     async with httpx.AsyncClient() as client:
         try:
-            response = await client.get(URL, params=PARAMS, timeout=10)
+            response = await client.get(URL, params=PARAMS, timeout=None)
             response.raise_for_status()
         except httpx.RequestError:
             return [], "StackOverflow: Не удалось выполнить поиск, попробуйте позже"

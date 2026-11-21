@@ -3,6 +3,7 @@ from aiogram.filters import Command, CommandStart
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import Message
+import asyncio
 
 from first_bot.searches import search_github, search_stackoverflow, search_wiki
 
@@ -34,11 +35,32 @@ async def receive_search_query(message: Message, state: FSMContext):
     query = message.text
     await state.clear()
 
-    wiki_results, wiki_message = await search_wiki(query)
-    github_results, github_message = await search_github(query)
-    stackoverflow_results, stackoverflow_message = await search_stackoverflow(query)
+    wiki, github, stackoverflow = await asyncio.gather(
+        asyncio.wait_for(search_wiki(query), timeout=10),
+        asyncio.wait_for(search_github(query), timeout=10),
+        asyncio.wait_for(search_stackoverflow(query), timeout=10),
+        return_exceptions=True
+    )
 
-    # Wikipedia:
+
+    # Проверка на неожиданные ошибки, чтобы при поломке одного - остальные отработали
+    if isinstance(wiki, Exception):
+        wiki_results, wiki_message = [], "Wikipedia: не удалось выполнить поиск."
+    else:
+        wiki_results, wiki_message = wiki
+
+    if isinstance(github, Exception):
+        github_results, github_message = [], "Github: не удалось выполнить поиск."
+    else:
+        github_results, github_message = github
+
+    if isinstance(stackoverflow, Exception):
+        stackoverflow_results, stackoverflow_message = [], "StackOverflow: не удалось выполнить поиск."
+    else:
+        stackoverflow_results, stackoverflow_message = stackoverflow
+
+
+    # Wikipedia ответ:
     if wiki_message:
         await message.answer(wiki_message)
     else:
@@ -47,7 +69,7 @@ async def receive_search_query(message: Message, state: FSMContext):
             receive = f"{item.title}\n{item.description}\n{item.url}\n{item.source}"
             await message.answer(receive)
 
-    # Github:
+    # Github ответ:
     if github_message:
         await message.answer(github_message)
     else:
@@ -56,7 +78,7 @@ async def receive_search_query(message: Message, state: FSMContext):
             receive = f"{item.title}\n{item.description}\n{item.stars}\n{item.language}\n{item.url}\n{item.source}"
             await message.answer(receive)
 
-    # StackOverflow
+    # StackOverflow ответ:
     if stackoverflow_message:
         await message.answer(stackoverflow_message)
     else:
