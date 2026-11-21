@@ -1,9 +1,10 @@
+import asyncio
+
 from aiogram import F, Router
 from aiogram.filters import Command, CommandStart
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import Message
-import asyncio
 
 from first_bot.searches import search_github, search_stackoverflow, search_wiki
 
