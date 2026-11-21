@@ -5,7 +5,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.types import BotCommand
 from dotenv import load_dotenv
 
-from first_bot.handlers import router
+from tg_search_bot.handlers import router
 
 load_dotenv()
 

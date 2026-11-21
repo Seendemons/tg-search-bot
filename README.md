@@ -1,4 +1,4 @@
-# Telegram Search Bot
+# tg-search-bot
 
 Бот ищет статьи в Wikipedia, репозитории на GitHub и вопросы на Stack Overflow.
 
@@ -17,7 +17,7 @@
 3. Откройте терминал в корне проекта и запустите бота. При первом запуске uv установит зависимости.
 
    ```bash
-   uv run first-bot
+   uv run tg-search-bot
    ```
 
 ## Проверка

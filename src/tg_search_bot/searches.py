@@ -2,7 +2,7 @@
 import httpx
 from bs4 import BeautifulSoup
 
-from first_bot.classes import SearchResult
+from tg_search_bot.classes import SearchResult
 
 
 async def search_wiki(query: str | None) -> tuple[list[SearchResult], str | None]:

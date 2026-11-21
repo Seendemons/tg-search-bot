@@ -6,7 +6,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import Message
 
-from first_bot.searches import search_github, search_stackoverflow, search_wiki
+from tg_search_bot.searches import search_github, search_stackoverflow, search_wiki
 
 router = Router()
 
