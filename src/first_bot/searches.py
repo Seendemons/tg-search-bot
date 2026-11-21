@@ -24,7 +24,7 @@ async def search_wiki(query: str | None) -> tuple[list[SearchResult], str | None
         except httpx.RequestError:
             return [], "Wikipedia: Не удалось выполнить поиск, попробуйте позже"
         except httpx.HTTPStatusError as error:
-            return [], f"Ошибка сервиса: {error.response.status_code}"
+            return [], f"Wikipedia: Ошибка сервиса: {error.response.status_code}"
 
         data = response.json()
 
@@ -65,7 +65,7 @@ async def search_github(query: str | None) -> tuple[list[SearchResult], str | No
         except httpx.RequestError:
             return [], "Github: Не удалось выполнить поиск, попробуйте позже"
         except httpx.HTTPStatusError as error:
-            return [], f"Ошибка сервиса: {error.response.status_code}"
+            return [], f"Github: Ошибка сервиса: {error.response.status_code}"
 
         data = response.json()
 
@@ -107,7 +107,7 @@ async def search_stackoverflow(query: str | None) -> tuple[list[SearchResult], s
         except httpx.RequestError:
             return [], "StackOverflow: Не удалось выполнить поиск, попробуйте позже"
         except httpx.HTTPStatusError as error:
-            return [], f"Ошибка сервиса: {error.response.status_code}"
+            return [], f"StackOverflow: Ошибка сервиса: {error.response.status_code}"
 
         data = response.json()
 
