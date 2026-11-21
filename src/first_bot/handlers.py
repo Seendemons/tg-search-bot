@@ -9,6 +9,8 @@ from first_bot.searches import search_github, search_stackoverflow, search_wiki
 
 router = Router()
 
+semaphore = asyncio.Semaphore(5)
+
 
 class SearchStates(StatesGroup):
     waiting_for_query = State()
@@ -35,12 +37,14 @@ async def receive_search_query(message: Message, state: FSMContext):
     query = message.text
     await state.clear()
 
-    wiki, github, stackoverflow = await asyncio.gather(
-        asyncio.wait_for(search_wiki(query), timeout=10),
-        asyncio.wait_for(search_github(query), timeout=10),
-        asyncio.wait_for(search_stackoverflow(query), timeout=10),
-        return_exceptions=True
-    )
+
+    async with semaphore:
+        wiki, github, stackoverflow = await asyncio.gather(
+            asyncio.wait_for(search_wiki(query), timeout=10),
+            asyncio.wait_for(search_github(query), timeout=10),
+            asyncio.wait_for(search_stackoverflow(query), timeout=10),
+            return_exceptions=True
+        )
 
 
     # Проверка на неожиданные ошибки, чтобы при поломке одного - остальные отработали
