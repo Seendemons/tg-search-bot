@@ -68,7 +68,7 @@ async def receive_search_query(message: Message, state: FSMContext):
     if wiki_message:
         await message.answer(wiki_message)
     else:
-        await message.answer("Wikipedia")
+        await message.answer("Wikipedia:")
         for item in wiki_results:
             receive = f"{item.title}\n{item.description}\n{item.url}\n{item.source}"
             await message.answer(receive)
@@ -77,7 +77,7 @@ async def receive_search_query(message: Message, state: FSMContext):
     if github_message:
         await message.answer(github_message)
     else:
-        await message.answer("Github")
+        await message.answer("Github:")
         for item in github_results:
             receive = f"{item.title}\n{item.description}\n{item.stars}\n{item.language}\n{item.url}\n{item.source}"
             await message.answer(receive)
@@ -86,7 +86,7 @@ async def receive_search_query(message: Message, state: FSMContext):
     if stackoverflow_message:
         await message.answer(stackoverflow_message)
     else:
-        await message.answer("StackOverflow")
+        await message.answer("StackOverflow:")
         for item in stackoverflow_results:
             receive = f"{item.title}\n{item.answ_count}\n{item.rating}\n{item.is_answered}\n{item.url}\n{item.source}"
             await message.answer(receive)
